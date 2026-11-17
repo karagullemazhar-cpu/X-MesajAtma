@@ -38,11 +38,12 @@ Kendi X (`x.com`) hesabınıza mevcut tarayıcınızı bozmadan ayrı bir Chrome
 4. Açılan siyah kurulum penceresi **her şeyi otomatik tamamlayana kadar bekleyin**:
    - Python 3.13 yoksa kendisi indirip kurar.
    - Google Chrome yoksa kendisi indirip kurar.
-   - Tüm Python paketlerini izole `.venv` ortamına kurar.
-   - NVIDIA ekran kartınız varsa GPU ses hızlandırma paketlerini otomatik ekler.
+   - Microsoft Visual C++ çalışma kütüphanesi eksikse kendisi kurar.
+   - Tüm Python paketlerini izole `.venv` ortamına indirip kurar (`playwright`, `faster-whisper`, `ctranslate2`, `sounddevice`, `numpy`, `Pillow`, `huggingface_hub`).
+   - NVIDIA ekran kartınız varsa GPU ses hızlandırma paketlerini (`nvidia-cublas-cu12`, `nvidia-cudnn-cu12`, `nvidia-cuda-nvrtc-cu12`) otomatik ekler.
    - Yerel Türkçe sesle yazma (STT) yapay zeka modelini (~1.5 GB) otomatik indirir.
    - Masaüstünüze **`X-MesajAtma`** simgesini oluşturur.
-5. Kurulum bitince bir tuşa basın; uygulama doğrudan açılır. Sonraki günlerde masaüstündeki **`X-MesajAtma`** simgesine çift tıklamanız yeterlidir.
+5. Kurulum bitince bir tuşa basın; uygulama doğrudan açılır.
 
 ### Yöntem 2 — Tek Komutla Kurulum (PowerShell)
 
@@ -51,6 +52,29 @@ Başlat menüsüne `PowerShell` yazıp açın, aşağıdaki tek satırı yapış
 ```powershell
 irm https://raw.githubusercontent.com/karagullemazhar-cpu/X-MesajAtma/main/KUR.ps1 | iex
 ```
+
+*(Bu komut dosyaları otomatik olarak `%LOCALAPPDATA%\X-MesajAtma` klasörüne indirir, kurulumu yapar ve masaüstüne kısayol ekler.)*
+
+---
+
+## Uygulamayı Başlatma (Kurulumdan Sonra)
+
+Kurulum bittikten sonra uygulamayı başlatmak için aşağıdakilerden **herhangi birini** kullanabilirsiniz:
+
+- **En Kolay Yol (Tıklama):** Masaüstündeki **`X-MesajAtma`** simgesine (veya kurulum klasöründeki **`BASLAT.bat`** dosyasına) çift tıklayın.
+- **Komutla Başlatma (`KUR.ps1` tek komut ile kurduysanız — PowerShell):**
+  ```powershell
+  & "$env:LOCALAPPDATA\X-MesajAtma\BASLAT.bat"
+  ```
+- **Komutla Başlatma (ZIP klasörünün içindeyken — CMD veya PowerShell):**
+  ```bat
+  BASLAT.bat
+  ```
+- **Doğrudan Python Ortamından Başlatma (klasör içinde):**
+  ```bat
+  .venv\Scripts\pythonw.exe xpost.py
+  ```
+  *(Arka plan loglarını terminalde görmek isterseniz `pythonw.exe` yerine `.venv\Scripts\python.exe xpost.py` yazabilirsiniz.)*
 
 ---
 

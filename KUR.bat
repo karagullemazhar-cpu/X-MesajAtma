@@ -1,5 +1,6 @@
 @echo off
 chcp 65001 >nul 2>&1
+set "PYTHONIOENCODING=utf-8"
 setlocal EnableExtensions
 title X-MesajAtma - Otomatik Kurulum
 cd /d "%~dp0"
@@ -25,6 +26,12 @@ if defined PYEXE goto :python_var
 if exist "%LOCALAPPDATA%\Programs\Python\Python313\python.exe" (
     "%LOCALAPPDATA%\Programs\Python\Python313\python.exe" -c "import tkinter" >nul 2>&1
     if not errorlevel 1 set "PYEXE=%LOCALAPPDATA%\Programs\Python\Python313\python.exe"
+)
+if defined PYEXE goto :python_var
+
+if exist "%ProgramFiles%\Python313\python.exe" (
+    "%ProgramFiles%\Python313\python.exe" -c "import tkinter" >nul 2>&1
+    if not errorlevel 1 set "PYEXE=%ProgramFiles%\Python313\python.exe"
 )
 if defined PYEXE goto :python_var
 
@@ -138,6 +145,16 @@ if not exist "%~dp0.venv\Scripts\python.exe" (
 echo        Temel paketler indiriliyor ve kuruluyor (internet gerekir)...
 "%~dp0.venv\Scripts\python.exe" -m pip install --upgrade pip --quiet --disable-pip-version-check
 "%~dp0.venv\Scripts\python.exe" -m pip install -r "%~dp0requirements.txt" --quiet --disable-pip-version-check
+
+if not exist "%SystemRoot%\System32\msvcp140.dll" (
+    echo        Microsoft Visual C++ calisma kutuphanesi kuruluyor...
+    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+     "$ProgressPreference='SilentlyContinue'; Invoke-WebRequest -Uri 'https://aka.ms/vs/17/release/vc_redist.x64.exe' -OutFile (Join-Path $env:TEMP 'vc_redist.x64.exe') -UseBasicParsing"
+    if exist "%TEMP%\vc_redist.x64.exe" (
+        "%TEMP%\vc_redist.x64.exe" /install /quiet /norestart
+        del /f /q "%TEMP%\vc_redist.x64.exe" >nul 2>&1
+    )
+)
 
 "%~dp0.venv\Scripts\python.exe" -c "import playwright, faster_whisper, sounddevice, numpy, PIL, huggingface_hub, tkinter" >nul 2>&1
 if errorlevel 1 (

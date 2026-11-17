@@ -4,6 +4,11 @@ $ErrorActionPreference = 'Stop'
 # PowerShell penceresine yapistirip Enter'a basin:
 #   irm https://raw.githubusercontent.com/karagullemazhar-cpu/X-MesajAtma/main/KUR.ps1 | iex
 
+try {
+    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+} catch {
+}
+
 $repo  = 'karagullemazhar-cpu/X-MesajAtma'
 $hedef = Join-Path $env:LOCALAPPDATA 'X-MesajAtma'
 $zip   = Join-Path $env:TEMP 'xmesajatma.zip'
