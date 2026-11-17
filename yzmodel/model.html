@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>X Poster YZ</title>
+</head>
+<body>
+<div id="s">Başlatılmadı</div>
+<script type="module">
+import * as webllm from "https://esm.run/@mlc-ai/web-llm";
+
+const MODELS = [
+  "gemma-4-E2B-it-q4f16_1-MLC",   // en yeni Gemma 4 — kullanıcı tercihi
+  "Qwen3.5-4B-q4f16_1-MLC",       // yüklenemezse yedekler
+  "Qwen3-4B-q4f16_1-MLC",
+];
+
+// Prompt ve üslup açıları tek kaynaktan (prompt.json) gelir —
+// Python tarafındaki bulut modeli de AYNI dosyayı kullanır.
+let SYSTEM = "Görev: Verilen konuya göre Türkçe paylaşım (tweet) metni yazmak. Kural: Hashtag yazılmaz, emoji yok, tırnak yok, açıklama yok.";
+try {
+  const cfg = await (await fetch("prompt.json", { cache: "no-store" })).json();
+  if (cfg && cfg.system) SYSTEM = cfg.system;
+} catch (e) {
+  console.warn("prompt.json yüklenemedi:", e);
+}
+
+let engine = null;
+let ready = false;
+let loadingPromise = null;
+const s = document.getElementById("s");
+
+window.loadModel = async () => {
+  if (ready) return "HAZIR";
+  if (loadingPromise) return loadingPromise;
+  loadingPromise = (async () => {
+    let lastErr = null;
+    for (const mid of MODELS) {
+      try {
+        s.textContent = mid + " yükleniyor...";
+        engine = await webllm.CreateMLCEngine(mid, {
+          initProgressCallback: (p) => {
+            const t = p.text || "...";
+            s.textContent = mid + " — " + t;
+            document.title = "X Poster YZ — " + t.slice(0, 60);
+          },
+        });
+        window.modelId = mid;
+        ready = true;
+        s.textContent = "HAZIR (" + mid + ")";
+        document.title = "X Poster YZ — HAZIR";
+        return "HAZIR";
+      } catch (e) {
+        lastErr = e;
+        s.textContent = mid + " yüklenemedi, sıradaki deneniyor...";
+      }
+    }
+    throw (lastErr || new Error("hiçbir model yüklenemedi"));
+  })();
+  try {
+    return await loadingPromise;
+  } finally {
+    loadingPromise = null;
+  }
+};
+
+window.isReady = () => ready;
+window.lastError = () => window._err || null;
+window.YZ_VERSION = 5;   // Python bu sürümü bekler; uyuşmazsa sekme yenilenir
+
+window.generate = async (topic, tags, angle, cap, note, temp, focus, avoid) => {
+  if (!ready) throw new Error("model hazır değil");
+  const capN = cap || 220;
+  const temperature = (typeof temp === "number" && !Number.isNaN(temp)) ? temp : 1.0;
+  let user = "Konu: " + topic + "\nHashtagler: " + (tags || "(yok)");
+  if (focus) user += "\nÖncelikli odak (konudan özellikle bunları işle): " + focus;
+  user += "\nÜslup yönergesi: " + (angle || "net bir tespitle başla")
+    + "\nUzunluk: " + (note || "2-4 kısa cümle") + ". En fazla " + capN + " karakter.";
+  if (avoid) user += "\nTekrarlama (bu girişlerden farklı yaz): " + avoid;
+  user += "\nÇıktı:";
+  const r = await engine.chat.completions.create({
+    messages: [
+      { role: "system", content: SYSTEM },
+      { role: "user", content: user },
+    ],
+    temperature: temperature,
+    top_p: 0.95,
+    max_tokens: capN > 280 ? 800 : 350,
+  });
+  const raw = (r.choices[0]?.message?.content || "");
+  window.lastRaw = JSON.stringify({ raw: raw, finish: r.choices[0]?.finish_reason });
+  return raw.trim();
+};
+
+// Uzun mod: kısa metni anlamını ve seçili odağı koruyarak 5-7 cümleye genişlet
+window.expand = async (text, temp, focus) => {
+  if (!ready) throw new Error("model hazır değil");
+  const temperature = (typeof temp === "number" && !Number.isNaN(temp)) ? temp : 0.9;
+  const user = focus
+    ? ("Öncelikli odak: " + focus + "\n\nGenişletilecek taslak:\n" + text)
+    : text;
+  const r = await engine.chat.completions.create({
+    messages: [
+      { role: "system", content: "Sen Türkçe metin editörüsün. Verilen paylaşım metnini anlamını ve tonunu koruyarak 5-7 cümleye genişlet; varsa verilen odak ayrıntılarını ekle. Sadece genişletilmiş metni yaz; hashtag, emoji, tırnak ve açıklama yok. Kusursuz Türkçe imla." },
+      { role: "user", content: user },
+    ],
+    temperature: temperature,
+    top_p: 0.95,
+    max_tokens: 800,
+  });
+  return (r.choices[0]?.message?.content || "").trim();
+};
+
+s.textContent = "JS yüklendi — loadModel bekleniyor";
+</script>
+</body>
+</html>

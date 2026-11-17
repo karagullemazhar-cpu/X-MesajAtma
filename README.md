@@ -1,197 +1,77 @@
-# X-MesajAtma
+# X-MesajAtma (X Poster)
 
-Kullanicilardan gelen mesajlari sayan ve **canli** gosteren kucuk bir panel.
+Kendi X (`x.com`) hesabınıza mevcut tarayıcınızı bozmadan ayrı bir Chrome profiliyle paylaşım yapan, yerel Türkçe sesle yazma (**STT**), yerel **WebGPU** / **Bulut YZ** metin üretimi, **YZ afiş/resim üretimi**, toplu hashtag beğeni/repost ve canlı sayaç takibi sunan Windows masaüstü uygulaması.
 
-Bilgisayarina kurulur, tarayicida acilir, 4 sayiyi canli gosterir:
-
-| Sayi | Ne demek |
-|---|---|
-| **Toplam mesaj** | Simdiye kadar gelen tum mesajlar |
-| **Bugun** | Bugun gelen mesajlar (son 1 saat de altinda yazar) |
-| **Kac kisi yazdi** | Kac farkli kullanici |
-| **Kisi basina** | Kullanici basina ortalama mesaj |
-
-Ekranda ayrica **kim kac mesaj atmış** listesi ve **son mesajlar** canli akisi var.
-
-- Web sitesi gerekmez. Sunucu kiralamak gerekmez. API anahtari gerekmez.
-- Veriler senin bilgisayarinda kalir (`mesajlar.db` dosyasi).
-- Tek komutla kurulur, tek tikla calisir.
+![X Poster Uygulama Arayüzü](Demo.png)
 
 ---
 
-## Kurulum - Windows (en kolay yol)
+## Uygulamanın Özellikleri
 
-> Bilgisayar bilgisi gerekmez. Yazilanlari sirayla yap.
-
-**1. Indir**
-
-Bu sayfanin sag ustundeki yesil **`Code`** dugmesine bas → **`Download ZIP`** sec.
-Inen dosyayi **sag tik → Tumunu ayikla (Extract All)** ile cikart.
-
-**2. Kur**
-
-Cikarttigin klasorde **`KUR.bat`** dosyasina **cift tikla**.
-
-Siyah bir pencere acilir ve her seyi kendisi yapar:
-Python yoksa kurar, gerekli paketleri indirir, masaustune simge ekler.
-Bu islem 1-5 dakika surer. **Pencere kapanana kadar bekle.**
-
-**3. Calistir**
-
-Masaustunde olusan **`X-MesajAtma`** simgesine **cift tikla**.
-
-Tarayici kendiliginden acilir ve panel gorunur:
-**http://127.0.0.1:5077**
-
-Kapatmak icin acilan siyah pencereyi kapat. Bu kadar.
+1. Uygulama, ayrı bir Chrome profili kullanarak mevcut tarayıcınızı etkilemeden X hesabınıza tek pencereden paylaşım yapar.
+2. İlk açılışta X hesabınıza bir kez giriş yapmanız yeterlidir ve oturumunuz sonraki açılışlarda da korunur.
+3. Mesaj kutusuna yazdığınız metni `Gönder` butonuyla ya da `Ctrl+Enter` kısayoluyla anında paylaşabilirsiniz.
+4. `Hashtag'ler` alanına yazdığınız etiketler her mesajınızın altına otomatik olarak eklenir ve dosyaya kaydedilir.
+5. `X-UY` seçeneği açıksa yapay zeka mesajları 280 karakter sınırına göre, kapalıysa uzun gönderi modunda üretilir.
+6. Tarayıcıdan tamamen bağımsız `Sesle Yaz` özelliği, Türkçe konuşmanızı yerel GPU veya CPU kullanarak kutuya canlı yazar.
+7. Ekrandaki sabit mikrofon menüsünden istediğiniz mikrofonu seçebilir ve dinleme sırasında bile değiştirebilirsiniz.
+8. Canlı ses çubuğu ve hassasiyet ayarı (`Sessiz`, `Normal`, `Gürültülü`) mikrofon sesinin algılanmasını kolaylaştırır.
+9. `Konu` alanına yazdığınız başlığa göre Chrome içi WebGPU modeliyle veya bulut yapay zeka servisleriyle Türkçe mesaj üretebilirsiniz.
+10. Çeşitlilik kaydıracı, yapay zekanın üreteceği mesajların yaratıcılık ve ton farklılığını ayarlar.
+11. İstediğiniz bir X gönderisinin linkine `Reply`, `Quote`, `Like`, `Repost` ve `Bookmark` işlemlerini seçerek uygulayabilirsiniz.
+12. `Resim Ekle` bölümünden bilgisayarınızdan görsel seçebilir ya da OpenRouter API anahtarıyla mesajınıza uygun görsel üretebilirsiniz.
+13. Hashtag İşaretleme özelliği, seçtiğiniz etiket altındaki en az 30 gönderiyi otomatik olarak beğenir veya repost eder.
+14. Uygulama, Açık ve Koyu tema seçenekli, bölmeleri sürüklenip ayarlanabilen tek sayfa arayüz sunar ve ayarlarınızı hatırlar.
+15. Atılan mesaj, üretilen yapay zeka metni ve üretilen resim sayıları CounterAPI'ye canlı işlenir ve erişim kesilirse ilk bağlantıda tamamlanır.
 
 ---
 
-## Kurulum - tek komut (PowerShell)
+## Kurulum — Windows (Hiç Bilgisayar Bilgisi Gerekmez)
 
-Baslat menusune `PowerShell` yaz, acilinca bu satiri yapistir ve Enter'a bas:
+> Tüm kurulum dosyalarını paket **kendisi indirir ve kurar**; Python, Chrome veya ek ayar yapmanız gerekmez.
+
+### Yöntem 1 — İndir ve Tıkla (En Kolay)
+
+1. Bu sayfanın sağ üstündeki yeşil **`Code`** düğmesine basın → **`Download ZIP`** seçin.
+2. İnen ZIP dosyasına **sağ tıklayın → Tümünü Ayıkla (Extract All)** deyip klasöre çıkarın.
+3. Klasördeki **`KUR.bat`** dosyasına **çift tıklayın**. *(Windows güvenlik uyarısı çıkarsa `Ek bilgi` → `Yine de çalıştır` seçin.)*
+4. Açılan siyah kurulum penceresi **her şeyi otomatik tamamlayana kadar bekleyin**:
+   - Python 3.13 yoksa kendisi indirip kurar.
+   - Google Chrome yoksa kendisi indirip kurar.
+   - Tüm Python paketlerini izole `.venv` ortamına kurar.
+   - NVIDIA ekran kartınız varsa GPU ses hızlandırma paketlerini otomatik ekler.
+   - Yerel Türkçe sesle yazma (STT) yapay zeka modelini (~1.5 GB) otomatik indirir.
+   - Masaüstünüze **`X-MesajAtma`** simgesini oluşturur.
+5. Kurulum bitince bir tuşa basın; uygulama doğrudan açılır. Sonraki günlerde masaüstündeki **`X-MesajAtma`** simgesine çift tıklamanız yeterlidir.
+
+### Yöntem 2 — Tek Komutla Kurulum (PowerShell)
+
+Başlat menüsüne `PowerShell` yazıp açın, aşağıdaki tek satırı yapıştırıp **Enter**'a basın:
 
 ```powershell
 irm https://raw.githubusercontent.com/karagullemazhar-cpu/X-MesajAtma/main/KUR.ps1 | iex
 ```
 
-Geri kalan her seyi kendisi yapar.
+---
+
+## İlk Kullanım ve Ön Notlar
+
+1. **Tek Seferlik X Girişi:** Uygulama ilk açıldığında ayrı bir Chrome penceresi (`ChromeProfile/`) açar. Sağ üstte `● X Girişi Gerekli` yazıyorsa o Chrome penceresinden X hesabınıza giriş yapın; oturumunuz kalıcı saklanır.
+2. **Mikrofon İzni:** `🎤 Sesle Yaz` butonuna ilk basışınızda uygulamanın kendi penceresi mikrofon izni ister. Windows Ayarları → Gizlilik → Mikrofon altında masaüstü uygulamalarına izin verilmiş olmalıdır.
+3. **Resim Üretimi (`✦ YZ Resim Üret`) Gereksinimi:** Sağ paneldeki **Bulut Model** bölümündeki **`API Key`** kutusuna geçerli bir **OpenRouter API Key** girmeli, `Resim Ekle` kutusunu işaretlemeli ve mesaj kutusunu doldurmalısınız *(ücretsiz `recraft/recraft-v4.1-flash-v2:free` modelini kullanır)*.
 
 ---
 
-## Nasil calistirilir (kurulumdan sonra)
+## Detaylı Kılavuzlar
 
-Her gun yapman gereken tek sey:
+Hangi tuşun ne işe yaradığını, ne zaman çalışıp ne zaman çalışmadığını ve tüm ön ihtiyaçları ayrıntılı okumak için:
 
-1. Masaustundeki **`X-MesajAtma`** simgesine cift tikla.
-2. Tarayicida panel acilir: `http://127.0.0.1:5077`
-3. Bitince siyah pencereyi kapat (panel kapanir).
-
-Panel kendini **2 saniyede bir** yeniler; sayfayi elle yenilemene gerek yok.
-
-Istersen paneldeki **"Test mesaji gonder"** dugmesine bas: sayilarin nasil arttigini gorursun.
-
----
-
-## Kendi uygulamana baglama
-
-Uygulaman bir mesaj aldiginda (veya gonderdiginde) tek bir adrese haber vermesi yeterli.
-**3 yol var, en kolayi en basta:**
-
-### 1. Tarayici / webhook (kod yazmadan)
-
-```
-http://127.0.0.1:5077/api/mesaj?kullanici=ali&mesaj=merhaba
-```
-
-Bu adresi tarayiciya yazinca da calisir. IFTTT, Zapier, Make gibi araclarda
-"webhook" alanina bu adresi yazabilirsin.
-
-### 2. Herhangi bir dilden HTTP istegi (POST)
-
-```
-POST http://127.0.0.1:5077/api/mesaj
-Content-Type: application/json
-
-{"kullanici": "ali", "mesaj": "merhaba", "kanal": "uygulama"}
-```
-
-### 3. Python
-
-```python
-import requests
-requests.post("http://127.0.0.1:5077/api/mesaj",
-              json={"kullanici": "ali", "mesaj": "merhaba"}, timeout=5)
-```
-
-Hazir ornek dosya: `ornek_gonder.py`
-
-```bash
-python ornek_gonder.py 20
-```
-
-### Alanlar
-
-| Alan | Zorunlu | Aciklama |
-|---|---|---|
-| `kullanici` | **evet** | Kim yazdi (ornek: `ali`, `kullanici_123`) |
-| `mesaj` | hayir | Mesajin kendisi |
-| `kanal` | hayir | Nereden geldi (ornek: `whatsapp`, `uygulama`) |
-
-Ayni `kullanici` degerini kullanan mesajlar tek kisi sayilir.
-
----
-
-## Telefondan izleme
-
-Varsayilan olarak panel **sadece kendi bilgisayarinda** acilir. Bu guvenli olandir.
-
-Ayni Wi-Fi'deki telefondan izlemek istersen:
-
-1. Klasordeki `.env.example` dosyasini kopyala, adini `.env` yap.
-2. Icine sunlari yaz:
-   ```
-   HOST=0.0.0.0
-   MESAJ_ANAHTARI=kendine-bir-kelime-sec
-   ```
-3. `BASLAT.bat` ile yeniden baslat.
-4. Bilgisayarin yerel IP'sini ogren (`ipconfig` → IPv4 Adresi), telefonda
-   `http://O-IP:5077` yaz.
-
-`MESAJ_ANAHTARI` yazarsan panel sifre ister; adresin sonuna `?anahtar=kelimen`
-ekleyerek acarsin.
-
----
-
-## Sık sorunlar
-
-| Sorun | Cozum |
-|---|---|
-| `KUR.bat` acilip hemen kapaniyor | Python kurulu degil. Kurulum penceresi python.org sayfasini acar; Python'u kurarken **"Add python.exe to PATH"** kutusunu isaretle, sonra `KUR.bat`'a tekrar cift tikla. |
-| "Windows protected your PC" uyarisi | **More info** → **Run anyway**. Dosya sana ait. |
-| Panel acilmiyor | Siyah pencerede hata var mi bak. Port doluysa `.env` icinde `PORT=5078` yaz ve tekrar baslat. |
-| Sayilar artmiyor | Uygulaman `http://127.0.0.1:5077/api/mesaj` adresine istek atiyor mu kontrol et. Paneldeki "Test mesaji gonder" ile deneyebilirsin. |
-| Antivirus uyarisi | `KUR.bat` sadece Python kurar ve paket indirir; `.bat` dosyalari antiviruslere zaman zaman supheli gorunur. Izin ver. |
-
----
-
-## Gizli bilgiler (API anahtari) kurali
-
-Bu projede **hicbir API anahtari yok** ve olmayacak.
-
-Kendi anahtarlarini eklersen:
-
-- Anahtari **asla** `app.py` gibi dosyalara yazma.
-- `.env` dosyasina yaz. `.env` zaten `.gitignore` icinde, GitHub'a gitmez.
-- `.env` dosyasini kimseyle paylasma, ekran goruntusunu alma.
-
----
-
-## macOS / Linux
-
-```bash
-git clone https://github.com/karagullemazhar-cpu/X-MesajAtma.git
-cd X-MesajAtma
-bash kur.sh
-./baslat.sh
-```
-
----
-
-## Dosyalar
-
-| Dosya | Ne ise yarar |
-|---|---|
-| `app.py` | Uygulamanin kendisi (panel + API + veritabani) |
-| `KUR.bat` / `kur.sh` | Kurulum |
-| `BASLAT.bat` / `baslat.sh` | Calistirma |
-| `KUR.ps1` | Tek komutla uzaktan kurulum |
-| `ornek_gonder.py` | Ornek mesaj gonderme |
-| `mesajlar.db` | Veriler (kurulumdan sonra olusur, GitHub'a gitmez) |
-| `.env` | Gizli ayarlar (istege bagli, GitHub'a gitmez) |
+- 🇹🇷 **[Tam Kullanıcı Kılavuzu (Türkçe)](KULLANIM_KILAVUZU_TR.md)**
+- 🇬🇧 **[Complete User Guide (English)](USER_GUIDE_EN.md)**
+- 📋 **[Kısa Özellik Listesi](Ozellikler.md)**
 
 ---
 
 ## Lisans
 
-MIT - diledigin gibi kullan, degistir, paylas.
+[MIT](LICENSE)

@@ -1,1 +1,7 @@
-flask>=3.0,<4
+playwright
+faster-whisper
+ctranslate2
+sounddevice
+numpy
+Pillow
+huggingface_hub

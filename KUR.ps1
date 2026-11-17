@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 
-# X-MesajAtma - tek komutla kurulum
-# Kullanim (PowerShell penceresine yapistirin):
+# X-MesajAtma (X Poster) - tek komutla otomatik kurulum
+# PowerShell penceresine yapistirip Enter'a basin:
 #   irm https://raw.githubusercontent.com/karagullemazhar-cpu/X-MesajAtma/main/KUR.ps1 | iex
 
 $repo  = 'karagullemazhar-cpu/X-MesajAtma'
@@ -9,15 +9,16 @@ $hedef = Join-Path $env:LOCALAPPDATA 'X-MesajAtma'
 $zip   = Join-Path $env:TEMP 'xmesajatma.zip'
 
 Write-Host ''
-Write-Host '  X-MesajAtma kuruluyor...' -ForegroundColor Cyan
+Write-Host '  X-MesajAtma (X Poster) indiriliyor ve kuruluyor...' -ForegroundColor Cyan
 Write-Host ''
 
 try {
+    $ProgressPreference = 'SilentlyContinue'
     Invoke-WebRequest -Uri "https://github.com/$repo/archive/refs/heads/main.zip" `
                       -OutFile $zip -UseBasicParsing
 } catch {
     Write-Host '  Indirme basarisiz. Internet baglantisini kontrol edin.' -ForegroundColor Red
-    Write-Host "  Alternatif: github.com/$repo adresinden Code > Download ZIP"
+    Write-Host "  Alternatif: https://github.com/$repo adresinden Code > Download ZIP"
     Start-Sleep -Seconds 8
     exit 1
 }
@@ -31,7 +32,7 @@ Copy-Item -Path (Join-Path $ic.FullName '*') -Destination $hedef -Recurse -Force
 Remove-Item -Path $gecici, $zip -Recurse -Force -ErrorAction SilentlyContinue
 
 Write-Host "  Dosyalar hazir: $hedef"
-Write-Host '  Simdi kurulum basliyor...'
+Write-Host '  Otomatik kurulum basliyor (kullanici islemi gerekmez)...'
 Write-Host ''
 
 & (Join-Path $hedef 'KUR.bat')

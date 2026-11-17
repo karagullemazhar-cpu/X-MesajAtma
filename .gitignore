@@ -1,19 +1,25 @@
-# Gizli bilgiler ve kisisel veriler GitHub'a gitmez
-.env
-*.db
-*.db-journal
-*.db-wal
-*.db-shm
-mesajlar.db
+# Kisisel oturumlar, API anahtarlari, uretilen dosyalar ve model onbellegi GitHub'a gitmez
+ChromeProfile/
+state.json
+state.json.bak
+hashtags.txt
+pending_stats.json
+generated_images/
+stt_models/
+.zcode/
+diag.png
+error_state.png
+profile.png
+state.png
 
-# Python
+# Python / sanal ortam
 .venv/
 venv/
 env/
 __pycache__/
 *.py[cod]
-*.egg-info/
-.pytest_cache/
+*.tmp
+*.log
 
 # Isletim sistemi / editor
 .DS_Store
@@ -21,6 +27,3 @@ Thumbs.db
 desktop.ini
 .idea/
 .vscode/
-
-# Loglar
-*.log
